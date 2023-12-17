@@ -10,13 +10,18 @@ namespace DalTest
     internal class Program
     {
 
-        private static IEngineer? t_dalEngineer = new EngineerImplementation();
-        private static ITask? t_dalTask = new TaskImplementation();
-        private static IDependency? t_dalDependency = new DependencyImplementation();
+        //private static IEngineer? t_dalEngineer = new EngineerImplementation();//stage 1
+        //private static ITask? t_dalTask = new TaskImplementation();//stage 1
+        //private static IDependency? t_dalDependency = new DependencyImplementation();//stage 1
+
+        static readonly IDal t_dal = new DalList(); //stage 2
+
         static void Main(string[] args)
         {
             //call to initialize the lists
-            Initialization.Do(t_dalEngineer, t_dalTask, t_dalDependency);
+            //Initialization.Do(t_dalEngineer, t_dalTask, t_dalDependency);//stage 1
+            Initialization.Do(t_dal); //stage 2
+
             try
             {
                 //entity option
@@ -65,7 +70,7 @@ namespace DalTest
             return choice;
         }
 
-        //function that uses tryParse on an DateTime
+        //function that uses tryParse on an TimeSpan
         static DateTime tryParseDateTimeFunction()
         {
             DateTime choice;
@@ -74,6 +79,19 @@ namespace DalTest
             {
                 Console.WriteLine("Invalid input. Please enter a valid date and time format.");
                 Console.Write("Enter a date and time (yyyy-MM-dd HH:mm:ss): ");
+            }
+
+            return choice;
+        }
+        //function that uses tryParse on an DateTime
+        static TimeSpan TryParseTimeSpanFunction()
+        {
+            TimeSpan choice;
+
+            while (!TimeSpan.TryParse(Console.ReadLine(), out choice))
+            {
+                Console.WriteLine("Invalid input. Please enter a valid time span format.");
+                Console.Write("Enter a time span (d.hh:mm:ss): ");
             }
 
             return choice;
@@ -162,7 +180,6 @@ namespace DalTest
                                 Complexity = (EngineerExperience)(tryParseIntFunction()),
                                 StartDate = tryParseDateTimeFunction(),
                                 ScheduledDate = tryParseDateTimeFunction(),
-                                //ForecastDate = tryParseDateTimeFunction(),
                                 DeadlineDate = tryParseDateTimeFunction(),
                                 CompleteDate = tryParseDateTimeFunction(),
                                 RequiredEffortTime = TimeSpan.Parse(Console.ReadLine() ?? ""),
@@ -170,7 +187,7 @@ namespace DalTest
                                 Deliverables = Console.ReadLine(),
                                 Remarks = Console.ReadLine()
                             };
-                            id = t_dalTask?.Create(task);
+                            id = t_dal?.Task.Create(task);
                         }
                         break;
                     case 2:
@@ -183,7 +200,7 @@ namespace DalTest
                                 DependentTask = tryParseIntFunction(),
                                 DependentOnTask = tryParseIntFunction()
                             };
-                            id = t_dalDependency?.Create(dep);
+                            id = t_dal?.Dependency.Create(dep);
                         }
                         break;
                     case 3:
@@ -199,7 +216,7 @@ namespace DalTest
                                 Email = Console.ReadLine(),
                                 Cost = tryParseIntFunction()
                             };
-                            id = t_dalEngineer?.Create(eng);
+                            id = t_dal?.Engineer.Create(eng);
                         }
                         break;
                     default:
@@ -226,7 +243,7 @@ namespace DalTest
                             //Printing the requested task
                             Console.WriteLine("Enter id");
                             int id = tryParseIntFunction();
-                            DO.Task? ts = t_dalTask?.Read(id);
+                            DO.Task? ts = t_dal?.Task.Read(id);
                             Console.WriteLine(ts);
                         }
                         break;
@@ -235,7 +252,7 @@ namespace DalTest
                             //Printing the requested dependency
                             Console.WriteLine("Enter id");
                             int id = tryParseIntFunction();
-                            Dependency? dep = t_dalDependency?.Read(id);
+                            Dependency? dep = t_dal?.Dependency.Read(id);
                             Console.WriteLine(dep);
                         }
                         break;
@@ -244,7 +261,7 @@ namespace DalTest
                             //Printing the requested engineer
                             Console.WriteLine("Enter id");
                             int id = tryParseIntFunction();
-                            Engineer? eng = t_dalEngineer?.Read(id);
+                            Engineer? eng = t_dal?.Engineer.Read(id);
                             Console.WriteLine(eng);
                         }
                         break;
@@ -255,7 +272,7 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                Console.WriteLine(ex.Message);
             }
 
         }
@@ -268,7 +285,7 @@ namespace DalTest
                 case 1:
                     {
                         //Print all tasks
-                        List<DO.Task> allTask = t_dalTask!.ReadAll();
+                        List<DO.Task> allTask = t_dal!.Task.ReadAll()?.Where(d => d != null).Select(d => d!).ToList() ?? new List<DO.Task>();
                         Console.WriteLine("All Tasks");
                         foreach (var item in allTask)
                             Console.WriteLine(item);
@@ -277,7 +294,7 @@ namespace DalTest
                 case 2:
                     {
                         //Print all depenencies
-                        List<DO.Dependency> allDep = t_dalDependency!.ReadAll();
+                        List<Dependency> allDep = t_dal!.Dependency.ReadAll()?.Where(d => d != null).Select(d => d!).ToList() ?? new List<Dependency>();
                         Console.WriteLine("All Depenencies");
                         foreach (var item in allDep)
                             Console.WriteLine(item);
@@ -286,7 +303,7 @@ namespace DalTest
                 case 3:
                     {
                         //Print all engineers
-                        List<DO.Engineer> alleEng = t_dalEngineer!.ReadAll();
+                        List<Engineer> alleEng = t_dal!.Engineer.ReadAll()?.Where(d => d != null).Select(d => d!).ToList() ?? new List<Engineer>();
                         Console.WriteLine("All Engineers");
                         foreach (var item in alleEng)
                             Console.WriteLine(item);
@@ -309,25 +326,25 @@ namespace DalTest
                         {
                             //receiving the update task values
                             Console.WriteLine("Enter values in the following format to update the preferred task:");
-                            Console.WriteLine("iD, isMileStone, EngineerId, Alias, ComplexityLevel, StartDate, ScheduledDate, DeadlineDate, CompleteDate, RequiredEffortTime, Description, Deliverables, Remarks");
+                            Console.WriteLine("ID, isMileStone, EngineerId, Alias, ComplexityLevel, StartDate, ScheduledDate, DeadlineDate, CompleteDate, RequiredEffortTime, Description, Deliverables, Remarks");
+                            int id = tryParseIntFunction();
                             DO.Task task = new DO.Task
                             {
-                                Id = tryParseIntFunction(),
+                                Id = id,
                                 IsMileStone = bool.Parse(Console.ReadLine() ?? ""),
                                 EngineerId = tryParseIntFunction(),
-                                Alias = Console.ReadLine(),
+                                Alias = getLastStringTask(id, "Alias"),
                                 Complexity = (EngineerExperience)(tryParseIntFunction()),
                                 StartDate = tryParseDateTimeFunction(),
                                 ScheduledDate = tryParseDateTimeFunction(),
-                                //ForecastDate = tryParseDateTimeFunction(),
                                 DeadlineDate = tryParseDateTimeFunction(),
                                 CompleteDate = tryParseDateTimeFunction(),
-                                RequiredEffortTime = TimeSpan.Parse(Console.ReadLine() ?? ""),
-                                Description = Console.ReadLine(),
-                                Deliverables = Console.ReadLine(),
-                                Remarks = Console.ReadLine()
+                                RequiredEffortTime = TryParseTimeSpanFunction(),
+                                Description = getLastStringTask(id, "Description"),
+                                Deliverables = getLastStringTask(id, "Deliverables"),
+                                Remarks = getLastStringTask(id, "Remarks")
                             };
-                            t_dalTask?.Update(task);
+                            t_dal?.Task.Update(task);
                         }
                         break;
                     case 2:
@@ -341,7 +358,7 @@ namespace DalTest
                                 DependentTask = tryParseIntFunction(),
                                 DependentOnTask = tryParseIntFunction()
                             };
-                            t_dalDependency?.Update(dep);
+                            t_dal?.Dependency.Update(dep);
                         }
                         break;
                     case 3:
@@ -349,15 +366,16 @@ namespace DalTest
                             //receiving the update engineer values
                             Console.WriteLine("Enter values in the following format to update the preferred engineer:");
                             Console.WriteLine("Id, Level, Name, Email, Cost");
+                            int id = tryParseIntFunction();
                             Engineer eng = new Engineer
                             {
-                                Id = tryParseIntFunction(),
+                                Id = id,
                                 Level = (EngineerExperience)(tryParseIntFunction()),
-                                Name = Console.ReadLine(),
-                                Email = Console.ReadLine(),
+                                Name = getLastStringEngineer(id, "Name"),
+                                Email = getLastStringEngineer(id, "Email"),
                                 Cost = tryParseIntFunction()
                             };
-                            t_dalEngineer?.Update(eng);
+                            t_dal?.Engineer.Update(eng);
                         }
                         break;
                     default:
@@ -367,7 +385,7 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -383,7 +401,7 @@ namespace DalTest
                             //deleting the requested task
                             Console.WriteLine("Enter task id");
                             int id = tryParseIntFunction();
-                            t_dalTask?.Delete(id);
+                            t_dal?.Task.Delete(id);
                         }
                         break;
                     case 2:
@@ -391,7 +409,7 @@ namespace DalTest
                             //deleting the requested dependency
                             Console.WriteLine("Enter dependency id");
                             int id = tryParseIntFunction();
-                            t_dalDependency?.Delete(id);
+                            t_dal?.Dependency.Delete(id);
                         }
                         break;
                     case 3:
@@ -399,7 +417,7 @@ namespace DalTest
                             //deleting the requested engineer
                             Console.WriteLine("Enter engineer id");
                             int id = tryParseIntFunction();
-                            t_dalEngineer?.Delete(id);
+                            t_dal?.Engineer.Delete(id);
                         }
                         break;
                     default:
@@ -409,7 +427,7 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex);
             }
         }
 
@@ -422,15 +440,15 @@ namespace DalTest
                 {
                     case 1:
                         //Deleting all tasks
-                        t_dalTask?.Reset();
+                        t_dal?.Task.Reset();
                         break;
                     case 2:
                         //Deleting all dependencies
-                        t_dalDependency?.Reset();
+                        t_dal?.Dependency.Reset();
                         break;
                     case 3:
                         //Deleting all engineers
-                        t_dalEngineer?.Reset();
+                        t_dal?.Engineer.Reset();
                         break;
                     default:
                         Console.WriteLine("Invalid choice. Please try again.");
@@ -440,8 +458,55 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                Console.WriteLine(ex.Message);
             }
         }
+
+        //function to get the last option that was before the change at task
+        static string? getLastStringTask(int id, string typeS)
+        {
+            //function to get the last option that was before the change at task
+            string? choice;
+            choice = Console.ReadLine();
+
+            //in case that this engineer is exist and no input was returned
+            if (choice == "" && t_dal.Task.Read(id) != null)
+            {
+                //check which attribute of the task
+                if (typeS == "Description")
+                    choice = t_dal.Task.Read(id)!.Description;
+                else if (typeS == "Deliverables")
+                    choice = t_dal.Task.Read(id)!.Deliverables;
+                else if (typeS == "Alias")
+                    choice = t_dal.Task.Read(id)!.Alias;
+                else
+                    choice = t_dal.Task.Read(id)!.Remarks;
+            }
+
+            return choice;
+        }
+
+        //function to get the last option that was before the change at engineer
+        static string? getLastStringEngineer(int id, string typeS)
+        {
+            string? choice;
+            choice = Console.ReadLine();
+
+            //in case that this engineer is exist and no input was returned
+            if (choice =="" && t_dal.Engineer.Read(id) != null)
+            {
+                //check which attribute of the engineer
+                if (typeS == "Name")
+                    choice = t_dal.Engineer.Read(id)!.Name;
+                else
+                    choice = t_dal.Engineer.Read(id)!.Email;
+            }
+
+            return choice;
+        }
+
+       
     }
 }
+
+

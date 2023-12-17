@@ -2,8 +2,9 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
+using System.Linq;
 
-public class DependencyImplementation : IDependency
+internal class DependencyImplementation : IDependency
 {
     //creat dependency function
     public int Create(Dependency item)
@@ -20,8 +21,8 @@ public class DependencyImplementation : IDependency
     public void Delete(int id)
     {
         //In case that no dependency is found with such an ID, throw a note
-        if (!(DataSource.Dependencies.Exists(dep => dep.Id == id)))
-            throw new Exception($"Dependency with ID={id} is not exists");
+        if (!(DataSource.Dependencies.Any(dep => dep.Id == id)))
+            throw new DalDoesNotExistException($"Dependency with ID={id} is not exists");
 
         foreach (var x in DataSource.Dependencies)
         {
@@ -35,27 +36,43 @@ public class DependencyImplementation : IDependency
         }
     }
 
-    //read dependency function
+
+    //readAll dependency function
+    //public List<Dependency> ReadAll()
+    //{
+    //    return all dependencies list
+    //    return new List<Dependency>(DataSource.Dependencies);
+    //}
+
+    //read Dependency function
     public Dependency? Read(int id)
     {
-     
-        //Returning the requested dependency
-        return DataSource.Dependencies.Find(dep => dep.Id == id);
+        //return the requested dependency
+        return DataSource.Dependencies.FirstOrDefault(dep => dep.Id == id);
+    }
+
+    //read Dependency by filter function
+    public Dependency? Read(Func<Dependency, bool> filter)
+    {
+        return DataSource.Dependencies.FirstOrDefault(filter);
     }
 
     //readAll dependency function
-    public List<Dependency> ReadAll()
+    public IEnumerable<Dependency?> ReadAll(Func<Dependency, bool>? filter = null) //stage 2
     {
-        //return all dependencies list
-        return new List<Dependency>(DataSource.Dependencies);
+        if (filter == null)
+            return DataSource.Dependencies.Select(item => item);
+        else
+            return DataSource.Dependencies.Where(filter);
     }
+
 
     //update dependency function
     public void Update(Dependency item)
     {
         //In the case that no dependency is found with such an ID, throw a note
-        if (!(DataSource.Dependencies.Exists(dep => dep.Id == item.Id)))
-            throw new Exception($"Dependency with ID={item.Id} is not exists");
+        if (!(DataSource.Dependencies.Any(dep => dep.Id == item.Id)))
+            throw new DalDoesNotExistException($"Dependency with ID={item.Id} is not exists");
 
         foreach (var x in DataSource.Dependencies)
         {

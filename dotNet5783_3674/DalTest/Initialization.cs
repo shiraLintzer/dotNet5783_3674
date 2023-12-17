@@ -8,9 +8,13 @@ using Dal;
 
 public static class Initialization
 {
-    private static IEngineer? t_dalEngineer = new EngineerImplementation();
-    private static ITask? t_dalTask = new TaskImplementation();
-    private static IDependency? t_dalDependency = new DependencyImplementation();
+    //private static IEngineer? t_dalEngineer = new EngineerImplementation();//stage 1
+    //private static ITask? t_dalTask = new TaskImplementation();//stage 1
+    //private static IDependency? t_dalDependency = new DependencyImplementation();//stage 1
+
+    private static IDal? t_dal = new DalList(); //stage 2
+
+
 
     private static readonly Random s_rand = new();
 
@@ -33,7 +37,7 @@ public static class Initialization
             //Checking that it will not repeat the same IDs
             do
                 _id = s_rand.Next(200000000, 400000000);
-            while (t_dalEngineer?.Read(_id) != null);
+            while (t_dal?.Engineer.Read(_id) != null);
 
             _level = (EngineerExperience)s_rand.Next(Enum.GetNames(typeof(EngineerExperience)).Length);
             _cost = s_rand.Next(200, 1000);
@@ -42,7 +46,7 @@ public static class Initialization
 
             Engineer newEng = new(_id, _level, _name, _email, _cost);
 
-            help = t_dalEngineer?.Create(newEng);
+            help = t_dal?.Engineer.Create(newEng);
         }
 
     }
@@ -80,7 +84,7 @@ public static class Initialization
 
 
             Task newTS = new(0, false, null, _alias, null, _startDate, null, null, null, _requiredEffortTime, _description, _deliverables, _remarks);
-            help = t_dalTask!.Create(newTS);
+            help = t_dal!.Task.Create(newTS);
 
         }
     }
@@ -94,19 +98,19 @@ public static class Initialization
         //according to the request that both X and Y will depend on A,B,C
         int _depTask, _depOnTask;
         Dependency newDep1 = new(0, 1000, 1001);
-        help = t_dalDependency!.Create(newDep1);
+        help = t_dal!.Dependency.Create(newDep1);
         Dependency newDep2 = new(0, 1000, 1002);
-        help = t_dalDependency!.Create(newDep2);
+        help = t_dal!.Dependency.Create(newDep2);
         Dependency newDep3 = new(0, 1000, 1003);
-        help = t_dalDependency!.Create(newDep3);
+        help = t_dal!.Dependency.Create(newDep3);
 
 
         Dependency newDep4 = new(0, 1004, 1001);
-        help = t_dalDependency!.Create(newDep4);
+        help = t_dal!.Dependency.Create(newDep4);
         Dependency newDep5 = new(0, 1004, 1002);
-        help = t_dalDependency!.Create(newDep5);
+        help = t_dal!.Dependency.Create(newDep5);
         Dependency newDep6 = new(0, 1004, 1003);
-        help = t_dalDependency!.Create(newDep6);
+        help = t_dal!.Dependency.Create(newDep6);
 
 
         for (int i = 0; i<36; i++)
@@ -121,7 +125,7 @@ public static class Initialization
 
             //Creating the dependency
             Dependency newDep = new(0, _depTask, _depOnTask);
-            help = t_dalDependency!.Create(newDep);
+            help = t_dal!.Dependency.Create(newDep);
         }
     }
 
@@ -130,7 +134,7 @@ public static class Initialization
     {
         //Receiving the list of tasks as an array
         Task[] temp = new Task[20];
-        temp = t_dalTask!.ReadAll().ToArray();
+        temp = (t_dal?.Task.ReadAll()?.Where(task => task != null).ToArray() ?? Array.Empty<Task>())!;
         //Return a random task
         return temp[s_rand.Next(0,19)];
     }
@@ -144,11 +148,14 @@ public static class Initialization
     }
 
     //initialize the lists function
-    public static void Do(IEngineer? dalEngineer, ITask? dalTask, IDependency? dalDependency)
+    public static void Do(IDal? dal)
     {
         init();
-        dalEngineer = t_dalEngineer;
-        dalTask = t_dalTask;
-        dalDependency = t_dalDependency;
+        //dalEngineer = t_dalEngineer;
+        //dalTask = t_dalTask;
+        //dalDependency = t_dalDependency;
+
+        t_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
+
     }
 }

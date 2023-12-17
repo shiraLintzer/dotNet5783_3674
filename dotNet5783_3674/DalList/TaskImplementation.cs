@@ -3,7 +3,7 @@ using DalApi;
 using DO;
 using System.Collections.Generic;
 
-public class TaskImplementation : ITask
+internal class TaskImplementation : ITask
 {
     //create task function
     public int Create(Task item)
@@ -20,12 +20,12 @@ public class TaskImplementation : ITask
     public void Delete(int id)
     {
         //In case that no task is found with such an ID, throw a note
-        if (!(DataSource.Tasks.Exists(ts => ts.Id == id)))
-            throw new Exception($"Task with ID={id} is not exists");
+        if (!(DataSource.Tasks.Any(ts => ts.Id == id)))
+            throw new DalDoesNotExistException($"Task with ID={id} is not exists");
 
         //in case that there is a function that depend on this task
-        if(DataSource.Dependencies.Exists(ts => ts.DependentOnTask == id))
-            throw new Exception($" There is a task that depends on this task with ID={id}, so you can't delete it");
+        if(DataSource.Dependencies.Any(ts => ts.DependentOnTask == id))
+            throw new DalCanNotDeletException($" There is a task that depends on this task with ID={id}, so you can't delete it");
 
         foreach (var x in DataSource.Tasks)
         {
@@ -42,24 +42,41 @@ public class TaskImplementation : ITask
     //read task function
     public Task? Read(int id)
     {
-       
-        //return the requested dependency
-        return DataSource.Tasks.Find(ts => ts.Id == id);
+        //return the requested task
+        return DataSource.Tasks.FirstOrDefault(ts => ts.Id == id);
     }
 
-    //readAll task function
-    public List<Task> ReadAll()
+    //read task by filter function
+    public Task? Read(Func<Task, bool> filter)
     {
-        //return all task list
-        return new List<Task>(DataSource.Tasks);
+        return DataSource.Tasks.FirstOrDefault(filter);
     }
+
+    ////readAll task function
+    //public List<Task> ReadAll()
+    //{
+    //    //return all task list
+    //    return new List<Task>(DataSource.Tasks);
+    //}
+
+
+    //readAll task function
+    public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null) //stage 2
+    {
+        if (filter == null)
+            return DataSource.Tasks.Select(item => item);
+        else
+            return DataSource.Tasks.Where(filter);
+    }
+
+
 
     //update task function
     public void Update(Task item)
     {
         //In the case that no task is found with such an ID, throw a note
-        if (!(DataSource.Tasks.Exists(ts => ts.Id == item.Id)))
-            throw new Exception($"Task with ID={item.Id} is not exists");
+        if (!(DataSource.Tasks.Any(ts => ts.Id == item.Id)))
+            throw new DalDoesNotExistException($"Task with ID={item.Id} is not exists");
 
         foreach (var x in DataSource.Tasks)
         {
