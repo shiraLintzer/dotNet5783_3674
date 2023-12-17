@@ -255,7 +255,7 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                Console.WriteLine(ex.Message);
             }
 
         }
@@ -367,7 +367,7 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -440,7 +440,7 @@ namespace DalTest
             }
             catch (Exception ex)
             {
-                string errorMessage = ex.Message;
+                Console.WriteLine(ex.Message);   
             }
         }
     }
