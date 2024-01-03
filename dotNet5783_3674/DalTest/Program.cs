@@ -14,13 +14,15 @@ namespace DalTest
         //private static ITask? t_dalTask = new TaskImplementation();//stage 1
         //private static IDependency? t_dalDependency = new DependencyImplementation();//stage 1
 
-        static readonly IDal t_dal = new DalList(); //stage 2
+        /*static readonly IDal t_dal = new DalList();*/ //stage 2
+
+        static readonly IDal t_dal = new DalXml(); //stage 3
 
         static void Main(string[] args)
         {
             //call to initialize the lists
             //Initialization.Do(t_dalEngineer, t_dalTask, t_dalDependency);//stage 1
-            Initialization.Do(t_dal); //stage 2
+            
 
             try
             {
@@ -29,6 +31,7 @@ namespace DalTest
                 Console.WriteLine("1. Task");
                 Console.WriteLine("2. Dependency");
                 Console.WriteLine("3. Engineer");
+                Console.WriteLine("4. initialization all data");
                 Console.WriteLine("0. Exit");
 
                 int choice = tryParseIntFunction();
@@ -36,17 +39,33 @@ namespace DalTest
                 //Continue displaying the menu as long as exit is not clicked
                 while (choice != 0)
                 {
-                    PerformOperation(choice);
+                    if (choice == 4)
+                    {
+                        Console.Write("Would you like to create Initial data? (Y/N)"); //stage 3
+                        string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input"); //stage 3
+                        if (ans == "Y") //stage 3
+                        {
+                            t_dal.Reset();
+                            Initialization.Do(t_dal); //stage 2
+                            Console.WriteLine("The data has been initialized");
+                        }
 
+                    }
+                    if (choice != 4)
+                    {
+                        PerformOperation(choice);
+                    }
+                   
                     Console.WriteLine("\nMain Menu:");
                     Console.WriteLine("1. Task");
                     Console.WriteLine("2. Dependency");
                     Console.WriteLine("3. Engineer");
+                    Console.WriteLine("4. initialization all data");
                     Console.WriteLine("0. Exit");
 
                     choice = tryParseIntFunction();
                 }
-
+                
                 Console.WriteLine("Exiting program. Goodbye!");
             }
             catch (Exception ex)
@@ -57,7 +76,11 @@ namespace DalTest
 
         }
 
-        //function that uses tryParse on an Int
+
+        /// <summary>
+        /// function that uses tryParse on an Int
+        /// </summary>
+        /// <returns></returns>
         static int tryParseIntFunction()
         {
             int choice;
@@ -70,7 +93,10 @@ namespace DalTest
             return choice;
         }
 
-        //function that uses tryParse on an TimeSpan
+        /// <summary>
+        /// function that uses tryParse on an TimeSpan
+        /// </summary>
+        /// <returns></returns>
         static DateTime tryParseDateTimeFunction()
         {
             DateTime choice;
@@ -83,7 +109,11 @@ namespace DalTest
 
             return choice;
         }
-        //function that uses tryParse on an DateTime
+
+        /// <summary>
+        /// function that uses tryParse on an DateTime
+        /// </summary>
+        /// <returns></returns>
         static TimeSpan TryParseTimeSpanFunction()
         {
             TimeSpan choice;
@@ -97,7 +127,10 @@ namespace DalTest
             return choice;
         }
 
-        //the actions of any entity
+        /// <summary>
+        /// the actions of any entity
+        /// </summary>
+        /// <param name="choice"></param>
         static void PerformOperation(int choice)
         {
             Console.WriteLine("\nEntity Menu:");
@@ -129,7 +162,11 @@ namespace DalTest
             }
         }
 
-        //Division into actions according to the choice of an action
+        /// <summary>
+        /// Division into actions according to the choice of an action
+        /// </summary>
+        /// <param name="choice"></param>
+        /// <param name="operationChoice"></param>
         static void Organize(int choice, int operationChoice)
         {
             //Sending the choice so they know which entity to perform the action on
@@ -159,7 +196,10 @@ namespace DalTest
             }
         }
 
-        //CreateEntity function
+        /// <summary>
+        /// CreateEntity function
+        /// </summary>
+        /// <param name="choice"></param>
         static void CreateEntity(int choice)
         {
             try
@@ -231,7 +271,10 @@ namespace DalTest
 
         }
 
-        //ReadEntity function
+        /// <summary>
+        /// ReadEntity function
+        /// </summary>
+        /// <param name="choice"></param>
         static void ReadEntity(int choice)
         {
             try
@@ -277,7 +320,10 @@ namespace DalTest
 
         }
 
-        //ReadAllEntity function
+        /// <summary>
+        /// ReadAllEntity function
+        /// </summary>
+        /// <param name="choice"></param>
         static void ReadAllEntity(int choice)
         {
             switch (choice)
@@ -315,7 +361,10 @@ namespace DalTest
             }
         }
 
-        //UpdateEntity function
+        /// <summary>
+        /// UpdateEntity function
+        /// </summary>
+        /// <param name="choice"></param>
         static void UpdateEntity(int choice)
         {
             try
@@ -389,7 +438,10 @@ namespace DalTest
             }
         }
 
-        //DeleteEntity function
+        /// <summary>
+        /// DeleteEntity function
+        /// </summary>
+        /// <param name="choice"></param>
         static void DeleteEntity(int choice)
         {
             try
@@ -431,7 +483,10 @@ namespace DalTest
             }
         }
 
-        //ResetEntity function
+        /// <summary>
+        /// ResetEntity function
+        /// </summary>
+        /// <param name="choice"></param>
         static void ResetEntity(int choice)
         {
             try
@@ -462,7 +517,12 @@ namespace DalTest
             }
         }
 
-        //function to get the last option that was before the change at task
+        /// <summary>
+        /// function to get the last option that was before the change at task
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="typeS"></param>
+        /// <returns></returns>
         static string? getLastStringTask(int id, string typeS)
         {
             //function to get the last option that was before the change at task
@@ -486,7 +546,12 @@ namespace DalTest
             return choice;
         }
 
-        //function to get the last option that was before the change at engineer
+        /// <summary>
+        /// function to get the last option that was before the change at engineer
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="typeS"></param>
+        /// <returns></returns>
         static string? getLastStringEngineer(int id, string typeS)
         {
             string? choice;

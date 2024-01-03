@@ -6,7 +6,12 @@ using System.Linq;
 
 internal class DependencyImplementation : IDependency
 {
-    //creat dependency function
+
+    /// <summary>
+    /// creat dependency function
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public int Create(Dependency item)
     {
         //create a running ID number
@@ -17,7 +22,12 @@ internal class DependencyImplementation : IDependency
         return newId;
     }
 
-    //delete dependency function
+
+    /// <summary>
+    /// delete dependency function
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Delete(int id)
     {
         //In case that no dependency is found with such an ID, throw a note
@@ -37,14 +47,12 @@ internal class DependencyImplementation : IDependency
     }
 
 
-    //readAll dependency function
-    //public List<Dependency> ReadAll()
-    //{
-    //    return all dependencies list
-    //    return new List<Dependency>(DataSource.Dependencies);
-    //}
 
-    //read Dependency function
+    /// <summary>
+    /// read Dependency function
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Dependency? Read(int id)
     {
         //return the requested dependency
@@ -67,7 +75,11 @@ internal class DependencyImplementation : IDependency
     }
 
 
-    //update dependency function
+    /// <summary>
+    /// update dependency function
+    /// </summary>
+    /// <param name="item"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Update(Dependency item)
     {
         //In the case that no dependency is found with such an ID, throw a note
@@ -87,7 +99,10 @@ internal class DependencyImplementation : IDependency
         }
     }
 
-    //reset dependency function
+
+    /// <summary>
+    /// reset all data in dependency function
+    /// </summary>
     public void Reset()
     {
         //delete all dependencies

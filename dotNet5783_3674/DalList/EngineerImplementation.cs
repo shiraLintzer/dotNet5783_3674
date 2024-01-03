@@ -8,7 +8,13 @@ using System.Linq;
 
 internal class EngineerImplementation : IEngineer
 {
-    //create engineer function
+
+    /// <summary>
+    /// create engineer function
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    /// <exception cref="DalDoesAlreadyExistException"></exception>
     public int Create(Engineer item)
     {
         //In case that such an id already exists
@@ -20,7 +26,13 @@ internal class EngineerImplementation : IEngineer
 
     }
 
-    //delete engineer function
+
+    /// <summary>
+    /// delete engineer function
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
+    /// <exception cref="DalCanNotDeletException"></exception>
     public void Delete(int id)
     {
         //In case that no engineer is found with such an ID, throw a note
@@ -42,28 +54,36 @@ internal class EngineerImplementation : IEngineer
         }
     }
 
-    ////readAll engineer function
-    //public List<Engineer> ReadAll()
-    //{
-    //    //return all engineer list
-    //    return new List<Engineer>(DataSource.Engineers);
-    //}
 
-    //read Engineer function
+
+    /// <summary>
+    /// read Engineer function
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Engineer? Read(int id)
     {
         //return the requested Engineer
         return DataSource.Engineers.FirstOrDefault(en => en.Id == id);
     }
 
-    //read Engineer by filter function
+
+    /// <summary>
+    /// read Engineer by filter function
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public Engineer? Read(Func<Engineer, bool> filter)
     {
         return DataSource.Engineers.FirstOrDefault(filter);
     }
 
 
-    //readAll engineer function
+    /// <summary>
+    /// readAll engineer function
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<Engineer?> ReadAll(Func<Engineer, bool>? filter = null) //stage 2
     {
         if (filter == null)
@@ -72,7 +92,12 @@ internal class EngineerImplementation : IEngineer
             return DataSource.Engineers.Where(filter);
     }
 
-    //update engineer function
+
+    /// <summary>
+    /// update engineer function
+    /// </summary>
+    /// <param name="item"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Update(Engineer item)
     {
         //In case that no engineer is found with such an ID, throw a note
@@ -93,7 +118,10 @@ internal class EngineerImplementation : IEngineer
 
     }
 
-    //reset engineer function
+
+    /// <summary>
+    /// reset all data in engineer function
+    /// </summary>
     public void Reset()
     {
         //delete all engineers

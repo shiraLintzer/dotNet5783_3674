@@ -5,7 +5,11 @@ using System.Collections.Generic;
 
 internal class TaskImplementation : ITask
 {
-    //create task function
+    /// <summary>
+    /// create task function
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns> the new task id</returns>
     public int Create(Task item)
     {
         //create a running ID number
@@ -16,7 +20,13 @@ internal class TaskImplementation : ITask
         return newId;
     }
 
-    //delete task function
+
+    /// <summary>
+    /// delete task function
+    /// </summary>
+    /// <param name="id"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
+    /// <exception cref="DalCanNotDeletException"></exception>
     public void Delete(int id)
     {
         //In case that no task is found with such an ID, throw a note
@@ -39,28 +49,35 @@ internal class TaskImplementation : ITask
         }
     }
 
-    //read task function
+
+    /// <summary>
+    /// read task function
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     public Task? Read(int id)
     {
         //return the requested task
         return DataSource.Tasks.FirstOrDefault(ts => ts.Id == id);
     }
 
-    //read task by filter function
+
+    /// <summary>
+    /// read task by filter function
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public Task? Read(Func<Task, bool> filter)
     {
         return DataSource.Tasks.FirstOrDefault(filter);
     }
 
-    ////readAll task function
-    //public List<Task> ReadAll()
-    //{
-    //    //return all task list
-    //    return new List<Task>(DataSource.Tasks);
-    //}
 
-
-    //readAll task function
+    /// <summary>
+    /// readAll task function
+    /// </summary>
+    /// <param name="filter"></param>
+    /// <returns></returns>
     public IEnumerable<Task?> ReadAll(Func<Task, bool>? filter = null) //stage 2
     {
         if (filter == null)
@@ -71,7 +88,11 @@ internal class TaskImplementation : ITask
 
 
 
-    //update task function
+    /// <summary>
+    /// update task function
+    /// </summary>
+    /// <param name="item"></param>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public void Update(Task item)
     {
         //In the case that no task is found with such an ID, throw a note
@@ -91,7 +112,10 @@ internal class TaskImplementation : ITask
         }
     }
 
-    //reset task function
+
+    /// <summary>
+    /// reset all data in task function
+    /// </summary>
     public void Reset()
     {
         //delete all tasks

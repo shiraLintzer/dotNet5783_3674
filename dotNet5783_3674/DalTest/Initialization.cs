@@ -12,8 +12,8 @@ public static class Initialization
     //private static ITask? t_dalTask = new TaskImplementation();//stage 1
     //private static IDependency? t_dalDependency = new DependencyImplementation();//stage 1
 
-    private static IDal? t_dal = new DalList(); //stage 2
-
+    //private static IDal? t_dal = new DalList(); //stage 2
+    static readonly IDal t_dal = new DalXml(); //stage 3
 
 
     private static readonly Random s_rand = new();
@@ -155,7 +155,7 @@ public static class Initialization
         //dalTask = t_dalTask;
         //dalDependency = t_dalDependency;
 
-        t_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
+        dal = t_dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
 
     }
 }
