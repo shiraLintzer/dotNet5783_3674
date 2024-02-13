@@ -106,15 +106,19 @@ internal class DependencyImplementation : IDependency
     public void Reset()
     {
         //delete all dependencies
+        DataSource.Dependencies.Clear();
 
-        //Creating an array so that we don't reach an exception in the list
-        Dependency[] temp = new Dependency[DataSource.Dependencies.Count];
-        temp = DataSource.Dependencies.ToArray();
 
-        //deletion of each member
-        for (int i = 0; i < temp.Length; i++)
-        {
-            Delete(temp[i].Id);
-        }
+
+        
+        ////Creating an array so that we don't reach an exception in the list
+        //Dependency[] temp = new Dependency[DataSource.Dependencies.Count];
+        //temp = DataSource.Dependencies.ToArray();
+
+        ////deletion of each member
+        //for (int i = 0; i < temp.Length; i++)
+        //{
+        //    Delete(temp[i].Id);
+        //}
     }
 }

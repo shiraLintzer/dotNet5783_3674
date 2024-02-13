@@ -83,7 +83,7 @@ public class TaskImplementation : ITask
     public DO.Task? Read(Func<DO.Task, bool> filter)
     {
         List<DO.Task> listTasks = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_task);
-        return listTasks.FirstOrDefault(filter) ?? throw new DalDoesNotExistException("No task found matching the specified condition.");
+        return listTasks.FirstOrDefault(filter) /*?? throw new DalDoesNotExistException("No task found matching the specified condition.")*/;
     }
 
 
@@ -110,15 +110,8 @@ public class TaskImplementation : ITask
     public void Reset()
     {
         List<DO.Task> listTasks = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_task);
-        DO.Task[] arrTask = listTasks.ToArray();
-        for (int i = 0; i < arrTask.Length; i++)
-        {
-            try
-            {
-                Delete(arrTask[i].Id);
-            }
-            catch (DalCanNotDeletException e) { Console.WriteLine(e); }
-        }
+        listTasks.Clear();
+        XMLTools.SaveListToXMLSerializer(listTasks, s_task); ;
     }
 
 

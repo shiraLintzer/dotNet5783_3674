@@ -125,15 +125,19 @@ internal class EngineerImplementation : IEngineer
     public void Reset()
     {
         //delete all engineers
+        DataSource.Engineers.Clear();
 
-        //Creating an array so that we don't reach an exception in the list
-        Engineer[] temp = new Engineer[DataSource.Engineers.Count];
-        temp = DataSource.Engineers.ToArray();
 
-        //deletion of each member
-        for (int i = 0;i < temp.Length;i++)
-        {
-            Delete(temp[i].Id);
-        }
+
+
+        ////Creating an array so that we don't reach an exception in the list
+        //Engineer[] temp = new Engineer[DataSource.Engineers.Count];
+        //temp = DataSource.Engineers.ToArray();
+
+        ////deletion of each member
+        //for (int i = 0;i < temp.Length;i++)
+        //{
+        //    Delete(temp[i].Id);
+        //}
     }
 }

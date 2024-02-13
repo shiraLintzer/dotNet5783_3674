@@ -119,15 +119,20 @@ internal class TaskImplementation : ITask
     public void Reset()
     {
         //delete all tasks
+        DataSource.Tasks.Clear();
 
-        //Creating an array so that we don't reach an exception in the list
-        Task[] temp = new Task[DataSource.Tasks.Count];
-        temp = DataSource.Tasks.ToArray();
 
-        //deletion of each member
-        for (int i = 0; i < temp.Length; i++)
-        {
-            Delete(temp[i].Id);
-        }
+
+
+
+        ////Creating an array so that we don't reach an exception in the list
+        //Task[] temp = new Task[DataSource.Tasks.Count];
+        //temp = DataSource.Tasks.ToArray();
+
+        ////deletion of each member
+        //for (int i = 0; i < temp.Length; i++)
+        //{
+        //    Delete(temp[i].Id);
+        //}
     }
 }

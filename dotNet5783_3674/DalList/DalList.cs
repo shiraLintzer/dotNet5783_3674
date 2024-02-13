@@ -2,11 +2,15 @@
 using DalApi;
 
 
-sealed public class DalList : IDal
+sealed internal class DalList : IDal
 {
     public IEngineer Engineer => new EngineerImplementation();
     public IDependency Dependency => new DependencyImplementation();
     public ITask Task => new TaskImplementation();
+
+    public static IDal Instance { get; } = new DalList();
+    private DalList() { }
+
 
     //reset all data
     public void Reset()

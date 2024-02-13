@@ -9,7 +9,7 @@ public class EngineerImplementation : IEngineer
     const string s_task = @"tasks";
 
     /// <summary>
-    /// creaete new engineer with running id
+    /// creaete new engineer 
     /// </summary>
     /// <param name="item"></param>
     /// <returns></returns>
@@ -77,7 +77,7 @@ public class EngineerImplementation : IEngineer
     public Engineer? Read(Func<Engineer, bool> filter)
     {
         List<Engineer> listEngineers = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
-        return listEngineers.FirstOrDefault(filter) ?? throw new DalDoesNotExistException("No engineer found matching the specified condition.");
+        return listEngineers.FirstOrDefault(filter) /*?? throw new DalDoesNotExistException("No engineer found matching the specified condition.")*/;
     }
 
 
@@ -104,15 +104,8 @@ public class EngineerImplementation : IEngineer
     public void Reset()
     {
         List<Engineer> listEngineers = XMLTools.LoadListFromXMLSerializer<Engineer>(s_engineer);
-        DO.Engineer[] arreng = listEngineers.ToArray();
-        for (int i = 0; i < arreng.Length; i++)
-        {
-            try
-            {
-                Delete(arreng[i].Id);
-            }
-            catch (DalCanNotDeletException e) { Console.WriteLine(e); }
-        }
+        listEngineers.Clear();
+        XMLTools.SaveListToXMLSerializer(listEngineers, s_engineer);
     }
 
 

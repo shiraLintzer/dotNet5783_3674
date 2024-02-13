@@ -34,7 +34,6 @@ internal class DependencyImplementation : IDependency
     public int Create(Dependency item)
     {
         XElement rootDependency = XMLTools.LoadListFromXMLElement(s_dependencies);
-        //int elemId = XMLTools.GetAndIncreaseNextId("data-config", "NextDependencyId");
         int elemId = Config.NextDependencyId;
         XElement dependElemnt = new XElement("Dependency",
           new XElement("Id", elemId),
@@ -87,7 +86,7 @@ internal class DependencyImplementation : IDependency
         return (from dp in rootDependency?.Elements()
                 let dependency = createDependencyFromXElement(dp)
                 where dependency != null && filter(dependency)
-                select (Dependency?)dependency).FirstOrDefault() ?? throw new DalDoesNotExistException("matching dependency not found");
+                select (Dependency?)dependency).FirstOrDefault() /*?? throw new DalDoesNotExistException("matching dependency not found")*/;
     }
 
     /// <summary>
@@ -134,6 +133,14 @@ internal class DependencyImplementation : IDependency
     {
         //calling the other crud functions
         Delete(item.Id);
-        Create(item);
+        XElement rootDependency = XMLTools.LoadListFromXMLElement(s_dependencies);
+        int elemId = item.Id;
+        XElement dependElemnt = new XElement("Dependency",
+          new XElement("Id", elemId),
+          new XElement("DependenTask", item.DependentTask),
+          new XElement("DependensOnTask", item.DependentOnTask)
+          );
+        rootDependency.Add(dependElemnt);
+        XMLTools.SaveListToXMLElement(rootDependency, s_dependencies);
     }
 }
