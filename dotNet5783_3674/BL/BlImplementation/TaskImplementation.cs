@@ -77,7 +77,13 @@ internal class TaskImplementation : ITask
     }
 
 
-
+    /// <summary>
+    /// read task item
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="BO.BlDoesNotExistException"></exception>
+    /// <exception cref="DalDoesNotExistException"></exception>
     public BO.Task? Read(int id)
     {
         DO.Task? doTask = _dal.Task.Read(id);
@@ -94,9 +100,7 @@ internal class TaskImplementation : ITask
                  int newid = dep?.DependentOnTask ?? throw new DalDoesNotExistException("???");
                  var task = _dal.Task.Read(newid);
                  //Calculates the status
-                 Status status = _dal.Task.ReadAll(task => task.IsMileStone == true) == null
-                     ? 0
-                     : (Status)1;
+                 Status status = Calculate(newid);
                  //Returns a new member of type task in list
                  return new BO.TaskInList
                  {
@@ -212,7 +216,7 @@ internal class TaskImplementation : ITask
             //calculate the requiredEffortTime
             var requiredEffortTime = item.DeadlineDate - item.StartDate;
             taskUpdate = new DO.Task
-           (item.Id, false, item.Engineer?.Id, item.Alias, (DO.EngineerExperience?)item.Complexity, null, item.ScheduledDate, item.DeadlineDate, item.CompleteDate, item.RequiredEffortTime, item.Description, item.Deliverables, item.Remarks);
+           (item.Id, false, item.Engineer?.Id, item.Alias, (DO.EngineerExperience?)item.Complexity, item.StartDate, item.ScheduledDate, item.DeadlineDate, item.CompleteDate, item.RequiredEffortTime, item.Description, item.Deliverables, item.Remarks);
         }
         
         try
