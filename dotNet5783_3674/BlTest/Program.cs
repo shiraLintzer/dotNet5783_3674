@@ -28,7 +28,7 @@ namespace BlTest
                 //Continue displaying the menu as long as exit is not clicked
                 while (choice != 0)
                 {
-                    if (choice == 4)
+                    if (choice == 3)
                     {
                         Console.Write("Would you like to create Initial data? (Y/N)");
                         string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
@@ -40,12 +40,12 @@ namespace BlTest
                         }
 
                     }
-                    if(choice == 5)
+                    if(choice == 4)
                     {
                         s_bl.CreateProject();
                     }
 
-                    if (choice != 4 && choice != 5)
+                    if (choice != 3 && choice != 4)
                     {
                         PerformOperation(choice);
                     }
