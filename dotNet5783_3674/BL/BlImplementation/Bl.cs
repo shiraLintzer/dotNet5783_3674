@@ -42,7 +42,7 @@ internal class Bl : IBl
             {
                 //Getting the earliest start date of the task
                 DateTime endDate = _dal.Task.Read((int)(item!.DependentOnTask)!)
-                    ?.DeadlineDate ?? throw new BO.Validation($"You dont have a deadline date to task with id:{item.DependentTask}");
+                    ?.DeadlineDate ?? throw new BO.ValidationException($"You dont have a deadline date to task with id:{item.DependentTask}");
                 earliestDate = endDate > earliestDate ? endDate : earliestDate;
             }
         }
@@ -58,7 +58,7 @@ internal class Bl : IBl
     private DateTime GetStartDate()
     {
         Console.WriteLine("insert the start date:");
-        var startDate = DateTime.TryParse(Console.ReadLine(), out DateTime result) ? result : throw new BO.Validation("must insert value!");
+        var startDate = DateTime.TryParse(Console.ReadLine(), out DateTime result) ? result : throw new BO.ValidationException("must insert value!");
         return startDate;
     }
 
