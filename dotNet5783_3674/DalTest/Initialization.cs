@@ -159,4 +159,12 @@ public static class Initialization
         t_dal = DalApi.Factory.Get;
 
     }
+
+    /// <summary>
+    /// reset all data function
+    /// </summary>
+    public static void Reset()
+    {
+        t_dal?.Reset();
+    }
 }

@@ -17,7 +17,9 @@ internal class EngineerImplementation : IEngineer
     /// <exception cref="BO.BlDoesAlreadyExistException"></exception>
     public int Create(BO.Engineer item)
     {
-        if ((item.Id < 0) || (item.Cost != null && item.Cost < 0) || (item.Email != null && !item.Email.Contains('@')))
+        if (!IsValidIsraeliID(item.Id))
+            throw new BO.ValidationException("the ID is not correct");
+        if ((item.Cost != null && item.Cost < 0) || (item.Email != null && !item.Email.Contains('@')))
             throw new BO.ValidationException("one of the inputs that you put is not valid");
         DO.Engineer doEngineer = new DO.Engineer
         (item.Id, (DO.EngineerExperience)item.Level, item.Name, item.Email, item.Cost);
@@ -190,6 +192,46 @@ internal class EngineerImplementation : IEngineer
     {
         return ReadAll().Where(filter);
 
+    }
+
+
+
+    static bool IsValidIsraeliID(int id)
+    {
+        // בדיקת אורך מספר תעודת הזהות
+        if (id.ToString().Length != 9)
+            return false;
+
+        // יצירת מערך ספרות מהמספר תעודת הזהות
+        int[] digits = new int[9];
+        for (int i = 8; i >= 0; i--)
+        {
+            digits[i] = id % 10;
+            id /= 10;
+        }
+
+        // חישוב סכום ומכפלה עבור בדיקת אמיתות התעודה
+        int sum = 0;
+        for (int i = 0; i < 9; i++)
+        {
+            int digit = digits[i];
+            if (i % 2 == 0) // אם מספר במיקום זוגי
+            {
+                sum += digit;
+            }
+            else // אם מספר במיקום אי זוגי
+            {
+                digit *= 2;
+                if (digit > 9)
+                {
+                    digit -= 9;
+                }
+                sum += digit;
+            }
+        }
+
+        // בדיקה שסכום הספרות חלוק ב-10
+        return sum % 10 == 0;
     }
 
 }

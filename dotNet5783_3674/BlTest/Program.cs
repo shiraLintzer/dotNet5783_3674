@@ -34,7 +34,7 @@ namespace BlTest
                         string? ans = Console.ReadLine() ?? throw new FormatException("Wrong input");
                         if (ans == "Y")
                         {
-                            s_bl.Reset();
+                            s_bl.ResetDB();
                             Initialization.Do();
                             Console.WriteLine("The data has been initialized");
                         }

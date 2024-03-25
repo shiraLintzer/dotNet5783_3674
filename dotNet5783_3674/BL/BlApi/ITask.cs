@@ -11,4 +11,5 @@ public interface ITask
     //public void Reset();
 
     public IEnumerable<BO.Task?> GetTasksWithNoStartDate();
+    public IEnumerable<BO.TaskInEngineer?> GetAvailableTask();
 }

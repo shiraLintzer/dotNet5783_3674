@@ -1,5 +1,5 @@
 ﻿using BlApi;
-
+using System.Runtime.InteropServices;
 
 namespace BlImplementation;
 
@@ -15,13 +15,19 @@ internal class Bl : IBl
     public DateTime? EndDate { get; set; } = null;
     public bool IsCreate { get; set; } = false;
 
-    /// <summary>
-    /// reset all data;
-    /// </summary>
-    public void Reset()
-    {
-        DalApi.Factory.Get.Reset();
-    }
+    public void InitializeDB() => DalTest.Initialization.Do();
+
+
+    public void ResetDB() => DalTest.Initialization.Reset();
+
+
+    ///// <summary>
+    ///// reset all data;
+    ///// </summary>
+    //public void Reset()
+    //{
+    //    DalApi.Factory.Get.Reset();
+    //}
 
     /// <summary>
     /// Finding the earliest date to start a task
@@ -144,8 +150,9 @@ internal class Bl : IBl
         EndDate = endDate;
 
         _dal.updateStartProject(startDate);
-        _dal.updateEndProject(endDate);
-        
+        //_dal.updateEndProject(endDate);
+      //  DalApi.Factory.Get.updateStartProject
     }
+
 }
 

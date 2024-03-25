@@ -38,8 +38,14 @@ static class XMLTools
         XMLTools.SaveListToXMLElement(root, data_config_xml);
         return nextId;
     }
+    public static void SetDate(string data_config_xml, string elemName,DateTime? val)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(data_config_xml);
+        root.Element(elemName)?.SetValue(val.ToString());
+        XMLTools.SaveListToXMLElement(root, data_config_xml);
+    }
 
-    
+
 
     #endregion
 

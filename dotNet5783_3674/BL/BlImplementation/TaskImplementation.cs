@@ -171,6 +171,10 @@ internal class TaskImplementation : ITask
         //Before creating a schedule
         if (!Factory.Get().IsCreate)
         {
+            ///Check if there is a circle dependencies
+            if (item!.Dependencies?.Count() > 0 && !ImpossibleDependency(item!))
+                throw new BO.ValidationException("You cant insert a circle dependencies");
+
             taskUpdate = new DO.Task
             (item.Id, false, item.Engineer?.Id, item.Alias, (DO.EngineerExperience?)item.Complexity, null, item.ScheduledDate, item.DeadlineDate, item.CompleteDate, item.RequiredEffortTime, item.Description, item.Deliverables, item.Remarks);
             if (item.Dependencies != null)
@@ -239,6 +243,15 @@ internal class TaskImplementation : ITask
     }
 
     /// <summary>
+    /// function that returns all tasks that have no engineer
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<BO.TaskInEngineer?> GetAvailableTask()
+    {
+        return GetTasksByFilter(task => task?.Engineer == null).Select(tsk => new TaskInEngineer { Id = tsk!.Id, Alias = tsk.Alias }).ToList(); ;
+    }
+
+    /// <summary>
     /// general filter function
     /// </summary>
     /// <param name="filter"></param>
@@ -268,4 +281,23 @@ internal class TaskImplementation : ITask
             return  (Status)0;
     }
 
+
+    /// <summary>
+    /// function to check for circular dependency
+    /// </summary>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    private bool ImpossibleDependency(BO.Task task)
+    {
+        Queue<BO.TaskInList> taskQueue = new Queue<BO.TaskInList>(task.Dependencies!);
+        while (taskQueue.Count() != 0)
+        {
+            var currentTask = taskQueue.Dequeue();
+            if (currentTask.Id == task.Id)
+                return false;
+            Read(currentTask.Id)!.Dependencies?.ForEach(tsk => taskQueue.Enqueue(tsk));
+        }
+        return true;
+
+    }
 }

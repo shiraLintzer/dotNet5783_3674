@@ -1,2 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfEngineer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfEngineer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Engineer>
+    <Id>123</Id>
+    <Level>AdvancedBeginner</Level>
+    <Name>aaaa</Name>
+    <Email>a@</Email>
+    <Cost>125</Cost>
+  </Engineer>
+  <Engineer>
+    <Id>13579</Id>
+    <Level>Expert</Level>
+    <Name>bbb</Name>
+    <Email>b@</Email>
+    <Cost>200</Cost>
+  </Engineer>
+  <Engineer>
+    <Id>326303674</Id>
+    <Level>Novice</Level>
+    <Name>s</Name>
+    <Email>s@</Email>
+    <Cost>134</Cost>
+  </Engineer>
+</ArrayOfEngineer>
