@@ -15,7 +15,7 @@ internal class TaskImplementation : ITask
         //create a running ID number
         int newId = DataSource.Config.NextTaskId;
         //Copying the task data
-        Task t = new Task(newId, item.IsMileStone,item.EngineerId,item.Alias, item.Complexity/*,item.CreateDate*/, item.StartDate,item.ScheduledDate/*,item.ForecastDate*/,item.DeadlineDate,item.CompleteDate,item.RequiredEffortTime,item.Description,item.Deliverables,item.Remarks);
+        Task t = new Task(newId, item.IsMileStone,item.EngineerId,item.Alias, item.Complexity, item.CreateDate, item.StartDate,item.ScheduledDate/*,item.ForecastDate*/,item.DeadlineDate,item.CompleteDate,item.RequiredEffortTime,item.Description,item.Deliverables,item.Remarks);
         DataSource.Tasks.Add(t);
         return newId;
     }

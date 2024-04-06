@@ -16,13 +16,26 @@ public interface IBl
     //void Reset();
 
     //Create a schedule
-    public void CreateProject();
+    public void CreateProject(DateTime d);
 
     //Initialize Data
     public void InitializeDB();
 
 
-    
+
+    #region Clock
+
+    DateTime Clock { get; }
+    void AdvanceTimeByYear(int years);
+    void AdvanceTimeByMonth(int month);
+    void AdvanceTimeByDay(int day);
+    void AdvanceTimeByHour(int hour);
+    void InitializeTime();
+
+    #endregion
+
+
+
 
 
 

@@ -9,7 +9,7 @@ internal class Bl : IBl
 
     public IEngineer Engineer => new EngineerImplementation();
     public IMilestone Milestone => new MilestoneImplementation();
-    public ITask Task => new TaskImplementation();
+    public ITask Task => new TaskImplementation(this);
 
     public DateTime? StartDate { get; set; } = null;
     public DateTime? EndDate { get; set; } = null;
@@ -20,6 +20,7 @@ internal class Bl : IBl
 
     public void ResetDB() => DalTest.Initialization.Reset();
 
+    private static DateTime s_Clock = DateTime.Now;
 
     ///// <summary>
     ///// reset all data;
@@ -55,20 +56,6 @@ internal class Bl : IBl
         return earliestDate;
     }
 
-
-    /// <summary>
-    /// Getting the project start date
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="BO.Validation"></exception>
-    private DateTime GetStartDate()
-    {
-        Console.WriteLine("insert the start date:");
-        var startDate = DateTime.TryParse(Console.ReadLine(), out DateTime result) ? result : throw new BO.ValidationException("must insert value!");
-        return startDate;
-    }
-
-
     /// <summary>
     /// Update date of a task
     /// </summary>
@@ -76,7 +63,8 @@ internal class Bl : IBl
     /// <param name="startDate"></param>
     private void updateTask(DO.Task task, DateTime? startDate)
     {
-        _dal.Task.Update(task! with { StartDate = startDate, DeadlineDate = startDate + task.RequiredEffortTime });
+        DateTime? d = startDate!.Value.Add(task.RequiredEffortTime!.Value );
+        _dal.Task.Update(task! with { StartDate = startDate, DeadlineDate = d });
     }
 
 
@@ -122,10 +110,13 @@ internal class Bl : IBl
     /// <summary>
     /// Create a schedule
     /// </summary>
-    public void CreateProject()
+    public void CreateProject(DateTime d)
     {
-
-        DateTime startDate = GetStartDate();
+        if(d < Clock)
+        {
+            throw new BO.ValidationException("you can not put a date from the past");
+        }
+        DateTime startDate = d;
         IsCreate = true;
 
         var tasks = _dal.Task.ReadAll();
@@ -149,9 +140,65 @@ internal class Bl : IBl
         //Update endDate according to the latest deadline date
         EndDate = endDate;
 
+
         _dal.updateStartProject(startDate);
-        //_dal.updateEndProject(endDate);
+        _dal.updateEndProject(endDate);
       //  DalApi.Factory.Get.updateStartProject
+    }
+
+
+    /// <summary>
+    /// clock
+    /// </summary>
+    public DateTime Clock
+    {
+        get { return s_Clock; }
+        private set { s_Clock = value; }
+    }
+
+    /// <summary>
+    /// add year
+    /// </summary>
+    /// <param name="years"></param>
+    public void AdvanceTimeByYear(int year)
+    {
+        s_Clock = s_Clock.AddYears(year);
+    }
+
+    /// <summary>
+    /// add year
+    /// </summary>
+    /// <param name="months"></param>
+    public void AdvanceTimeByMonth(int month)
+    {
+        s_Clock = s_Clock.AddMonths(month);
+    }
+
+    /// <summary>
+    /// add day
+    /// </summary>
+    /// <param name="days"></param>
+    public void AdvanceTimeByDay(int day)
+    {
+        s_Clock = s_Clock.AddDays(day);
+    }
+
+
+    /// <summary>
+    /// add hour
+    /// </summary>
+    /// <param name="hours"></param>
+    public void AdvanceTimeByHour(int hour)
+    {
+        s_Clock = s_Clock.AddHours(hour);
+    }
+
+    /// <summary>
+    /// Initialize time to now
+    /// </summary>
+    public void InitializeTime()
+    {
+        s_Clock = DateTime.Now;
     }
 
 }

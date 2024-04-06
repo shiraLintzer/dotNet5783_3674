@@ -15,7 +15,7 @@ public static class Initialization
     /*private static IDal? t_dal = new DalList();*/ //stage 2
     /*static readonly IDal t_dal = new DalXml();*/ //stage 3
     private static IDal? t_dal = DalApi.Factory.Get;
-
+    
 
     private static readonly Random s_rand = new();
 
@@ -40,7 +40,7 @@ public static class Initialization
                 _id = s_rand.Next(200000000, 400000000);
             while (t_dal?.Engineer.Read(_id) != null);
 
-            _level = (EngineerExperience)s_rand.Next(Enum.GetNames(typeof(EngineerExperience)).Length);
+            _level = (EngineerExperience)s_rand.Next(Enum.GetNames(typeof(EngineerExperience)).Length -1);
             _cost = s_rand.Next(200, 1000);
 
             string _email = _id+ s_rand.Next(10, 20) + "@gmail.com";
@@ -58,12 +58,13 @@ public static class Initialization
         int help;
         string[] TaskNames =
         {
-        "D1", "E24", "Y7","A43", "D8", "S10","F34","J21","M8","B4","C9","X3","Z11","P6","L32","W22","V6","K4","O3","U9"
+        "D1", "E24", "Y7","A43", "D8", "S10"/*,"F34","J21","M8","B4","C9","X3","Z11","P6","L32","W22","V6","K4","O3","U9"*/
         };
 
         foreach (var _name in TaskNames)
         {
             //Random number of project start date between now and another year
+            DateTime _create = DateTime.Now;
             DateTime start = DateTime.Today;
             int rangeInDays = 365; 
             int randomNumberOfDays = s_rand.Next(rangeInDays);
@@ -75,6 +76,7 @@ public static class Initialization
             //DateTime _deadlineDate = randomDate.AddDays(110);
             //DateTime? _completeDate = (i % 2) == 0 ? randomDate.AddDays(90) : null;
 
+            int _Complexity = s_rand.Next(0, 4);
             int randomDays = s_rand.Next(30, 70); // בטווח של חודש ויותר (30 ימים עד 60 ימים)
             TimeSpan _requiredEffortTime = TimeSpan.FromDays(randomDays);
             string? _description = _name+" Description";
@@ -84,7 +86,7 @@ public static class Initialization
             
 
 
-            Task newTS = new(0, false, null, _alias, null, _startDate, null, null, null, _requiredEffortTime, _description, _deliverables, _remarks);
+            Task newTS = new(0, false, null, _alias, (EngineerExperience?)(_Complexity),_create, null, null, null, null, _requiredEffortTime, _description, _deliverables, _remarks);
             help = t_dal!.Task.Create(newTS);
 
         }
@@ -98,30 +100,30 @@ public static class Initialization
 
         //according to the request that both X and Y will depend on A,B,C
         int _depTask, _depOnTask;
-        Dependency newDep1 = new(0, 1000, 1001);
-        help = t_dal!.Dependency.Create(newDep1);
-        Dependency newDep2 = new(0, 1000, 1002);
-        help = t_dal!.Dependency.Create(newDep2);
-        Dependency newDep3 = new(0, 1000, 1003);
-        help = t_dal!.Dependency.Create(newDep3);
+        //Dependency newDep1 = new(0, 1000, 1001);
+        //help = t_dal!.Dependency.Create(newDep1);
+        //Dependency newDep2 = new(0, 1000, 1002);
+        //help = t_dal!.Dependency.Create(newDep2);
+        //Dependency newDep3 = new(0, 1000, 1003);
+        //help = t_dal!.Dependency.Create(newDep3);
 
 
-        Dependency newDep4 = new(0, 1004, 1001);
-        help = t_dal!.Dependency.Create(newDep4);
-        Dependency newDep5 = new(0, 1004, 1002);
-        help = t_dal!.Dependency.Create(newDep5);
-        Dependency newDep6 = new(0, 1004, 1003);
-        help = t_dal!.Dependency.Create(newDep6);
+        //Dependency newDep4 = new(0, 1004, 1001);
+        //help = t_dal!.Dependency.Create(newDep4);
+        //Dependency newDep5 = new(0, 1004, 1002);
+        //help = t_dal!.Dependency.Create(newDep5);
+        //Dependency newDep6 = new(0, 1004, 1003);
+        //help = t_dal!.Dependency.Create(newDep6);
 
-
-        for (int i = 0; i<36; i++)
+        int t = 1000;
+        for (int i = 0; i<4; i++)
         {
             //recive a random task
-            _depTask = RandomTask().Id;
+            _depTask = t;
 
             //Preventing circular dependency
             do
-                _depOnTask = RandomTask().Id;
+                _depOnTask = ++t;
             while (_depOnTask == _depTask);
 
             //Creating the dependency
@@ -134,10 +136,10 @@ public static class Initialization
     private static Task RandomTask()
     {
         //Receiving the list of tasks as an array
-        Task[] temp = new Task[20];
+        Task[] temp = new Task[6];
         temp = (t_dal?.Task.ReadAll()?.Where(task => task != null).ToArray() ?? Array.Empty<Task>())!;
         //Return a random task
-        return temp[s_rand.Next(0,19)];
+        return temp[s_rand.Next(0,6)];
     }
 
     //call to initialize the entities function
@@ -166,5 +168,7 @@ public static class Initialization
     public static void Reset()
     {
         t_dal?.Reset();
+        t_dal?.updateStartProject(null);
+        t_dal?.updateEndProject(null);
     }
 }

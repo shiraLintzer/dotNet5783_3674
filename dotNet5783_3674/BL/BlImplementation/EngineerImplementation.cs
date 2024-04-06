@@ -119,7 +119,8 @@ internal class EngineerImplementation : IEngineer
         var dependencies = _dal.Dependency.ReadAll(dep => dep.DependentTask == item.Task?.Id);
         bool isAllDone = dependencies.All(dep => Factory.Get().Task.Read((int)(dep?.DependentOnTask!))?.Status == Status.Done);
         //In case a schedule hasn't started yet and all tasks before have been done
-        if (BlApi.Factory.Get().IsCreate && isAllDone)
+        var v = _dal.ReturnStartProject();
+        if (_dal.ReturnStartProject() != null && (isAllDone ))
         {
 
             //If the task is empty, just delete the engineer from the previous task
@@ -138,14 +139,14 @@ internal class EngineerImplementation : IEngineer
                 if (newTask != null && newTask.EngineerId == null && (int?)newTask.Complexity <= (int?)item.Level)
                     _dal.Task.Update(newTask with { EngineerId = item.Id });
                 else
-                    Console.WriteLine("The engineer was not assigned the new task because there is a problem with one of the details, the rest of the data will be updated");
+                    throw new BO.ValidationException("The engineer was not assigned the new task because there is a problem with one of the details");
             }
 
 
         }
         else
         {
-            Console.WriteLine("Schedule has not been started or there are tasks that are still a work in progress, task cannot be updated. The rest of the data will be updated");
+            throw new BO.ValidationException("Schedule has not been started or there are tasks that are still a work in progress");
         }
 
         DO.Engineer doEngineer = new DO.Engineer
@@ -171,7 +172,7 @@ internal class EngineerImplementation : IEngineer
         return GetEngineersByFilter(engineer => engineer?.Level >= level);
     }
 
-
+   
     /// <summary>
     /// function that returns all engineers whose cost matches the required cost
     /// </summary>
@@ -195,7 +196,40 @@ internal class EngineerImplementation : IEngineer
     }
 
 
+    /// <summary>
+    /// functuin that return all Available engineers for task
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<BO.EngineerInTask?> GetAvailableEngineer()
+    {
+        //List<BO.EngineerInTask> availableEngineers = new List<BO.EngineerInTask>();
 
+        //foreach (var eng in GetEngineersByFilter(eng => eng?.Task == null))
+        //{
+        //    availableEngineers.Add(new BO.EngineerInTask { Id = eng!.Id, Name = eng.Name });
+        //}
+
+
+        //foreach (var eng in ReadAll())
+        //{
+        //    if(eng?.Task == null)
+        //    {
+        //        availableEngineers.Add(new BO.EngineerInTask { Id = eng!.Id, Name = eng.Name });
+
+        //    }
+        //    else if(eng.Task.Id)
+        //}
+
+
+        return GetEngineersByFilter(eng => eng?.Task == null).Select(eng => new EngineerInTask { Id = eng!.Id, Name = eng.Name }).ToList(); ;
+    }
+
+
+    /// <summary>
+    /// id validatio
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     static bool IsValidIsraeliID(int id)
     {
         // בדיקת אורך מספר תעודת הזהות

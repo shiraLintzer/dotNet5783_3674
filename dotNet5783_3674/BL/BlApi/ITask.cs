@@ -1,4 +1,6 @@
-﻿namespace BlApi;
+﻿using BO;
+
+namespace BlApi;
 
 public interface ITask
 {
@@ -12,4 +14,12 @@ public interface ITask
 
     public IEnumerable<BO.Task?> GetTasksWithNoStartDate();
     public IEnumerable<BO.TaskInEngineer?> GetAvailableTask();
+    public IEnumerable<BO.TaskForList?> GetAllTasksForList();
+    public IEnumerable<BO.TaskForList?> GetTasksAppropriateStatus(BO.Status status);
+    public List<BO.TaskScheduleDays?> GetAllScheduleTasks();
+    public IEnumerable<TaskInList?> GetAllDependenciesOptions();
+    public IEnumerable<TaskInEngineer> GetAvailableTasksForEngineer(int Id);
+
+
+
 }

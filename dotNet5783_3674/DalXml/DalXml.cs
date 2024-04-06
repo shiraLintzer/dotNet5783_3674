@@ -6,7 +6,7 @@ namespace Dal;
 
 sealed internal class DalXml : IDal
 {
-    static string s_data_config_xml = "data_config_xml";
+    static string s_data_config_xml = "data-config";
 
     public IDependency Dependency => new DependencyImplementation();
 
@@ -37,23 +37,23 @@ sealed internal class DalXml : IDal
 
     public DateTime? ReturnEndProject()
     {
-        return Config.endProject;
+        return XMLTools.GetDate(s_data_config_xml, "endProject");
     }
 
     public DateTime? ReturnStartProject()
     {
-        return Config.startProject;
+        return XMLTools.GetDate(s_data_config_xml, "startProject");
     }
 
     public void updateEndProject(DateTime? value)
     {
         Config.endProject = value;
-        XMLTools.SetDate(s_data_config_xml, "startProject", value);
+        XMLTools.SetDate(s_data_config_xml, "endProject", value);
     }
 
     public void updateStartProject(DateTime? value)
     {
         Config.startProject = value;
-        XMLTools.SetDate(s_data_config_xml, "endProject", value);
+        XMLTools.SetDate(s_data_config_xml, "startProject", value);
     }
 }

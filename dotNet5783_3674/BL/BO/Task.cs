@@ -16,7 +16,7 @@ public class Task
     public string? Alias { get; set; }
     public DateTime? createAtDate { get; set; } = null;
     public BO.Status? Status { get; set; } = null;
-    public List<TaskInList>? Dependencies { get; init; } = null;
+    public List<TaskInList>? Dependencies { get; set; } = null;
     //TimeSpan? RequiredEffortTime { get; init; } 
     public MilestoneInTask? Milestone { get; set; } = null;
     public DateTime? StartDate { get; set; } = null;

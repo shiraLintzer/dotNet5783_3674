@@ -5,17 +5,22 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <local:EngineerCollection x:Key="EngineerCollectionKey" />
-        <local:TaskCollection x:Key="TaskCollectionKey" />
+        <local:StatusCollection x:Key="StatusCollectionKey" />
+        <!--<local:TaskCollection x:Key="TaskCollectionKey" />-->
+        <local:EngineerAvailableForTaskCollection x:Key="EngineerAvailableForTaskCollectionKey" />
+        <local:TaskAvailableForEngineerCollection x:Key="TaskAvailableForEngineerCollectionKey" />
         <local:ConvertIdToContent x:Key="ConverIdToContentKey"/>
+        <local:TasksDependencies x:Key="TasksDependenciesKey"/>
         <local:IsEnableConverterTask x:Key="IsEnableConverterTaskKey"/>
         <local:IsEnableConverter x:Key="IsEnableConverterKey"/>
-
-
-        <!--Background="#ADD8E6"-->
-        <Style TargetType="TextBlock">
-            
-        </Style>
         
+
+        
+
+       
+
+         <BitmapImage x:Key="MyIcon" UriSource="C:\Users\שירה\source\repos\shiraLintzer\dotNet5783_3674\PL\Images\images.jpg"/>
+
         <Style TargetType="Button">
             <Setter Property="Background" Value="LightBlue" />
             <Setter Property="BorderBrush" Value="Black" />
@@ -36,6 +41,14 @@
             <Setter Property="FontWeight" Value="bold" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Right" />
+
+
+            <!--<Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsSelected}" Value="True">
+                    <Setter Property="Foreground" Value="Brown" />
+                </DataTrigger>
+            </Style.Triggers>-->
+
         </Style>
         <Style TargetType="ComboBox">
             <Setter Property="FontFamily" Value="Georgia" />

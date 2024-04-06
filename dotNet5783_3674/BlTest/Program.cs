@@ -42,7 +42,7 @@ namespace BlTest
                     }
                     if(choice == 4)
                     {
-                        s_bl.CreateProject();
+                        s_bl.CreateProject(s_bl.Clock);
                     }
 
                     if (choice != 3 && choice != 4)

@@ -14,4 +14,5 @@ public interface IEngineer
 
     public IEnumerable<BO.Engineer?> GetEngineersAppropriateLevel(BO.EngineerExperience level);
     public IEnumerable<BO.Engineer?> GetEngineersAppropriateCost(int cost);
+    public IEnumerable<BO.EngineerInTask?> GetAvailableEngineer();
 }

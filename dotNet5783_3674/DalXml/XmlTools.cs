@@ -41,8 +41,15 @@ static class XMLTools
     public static void SetDate(string data_config_xml, string elemName,DateTime? val)
     {
         XElement root = XMLTools.LoadListFromXMLElement(data_config_xml);
-        root.Element(elemName)?.SetValue(val.ToString());
+        root.Element(elemName)?.SetValue(val.ToString()!);
         XMLTools.SaveListToXMLElement(root, data_config_xml);
+    }
+
+    public static DateTime? GetDate(string data_config_xml, string elemName)
+    {
+        XElement root = XMLTools.LoadListFromXMLElement(data_config_xml);
+        return root.ToDateTimeNullable(elemName) ;
+        
     }
 
 

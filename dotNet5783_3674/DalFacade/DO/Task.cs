@@ -25,7 +25,7 @@ public record Task
     int? EngineerId = null,
     string? Alias = null,
     EngineerExperience? Complexity = null,
-    //DateTime? CreateDate = null,
+    DateTime? CreateDate = null,
     DateTime? StartDate = null,
     DateTime? ScheduledDate = null,
     //DateTime? ForecastDate = null,
@@ -43,7 +43,7 @@ public record Task
     public Task() : this(0, false) { }
 
     //Task creation date
-    public DateTime CreateDate => DateTime.Now;
+    //public DateTime CreateDate => DateTime.Now;
 
     //ToString Task function
     public override string ToString()

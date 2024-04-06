@@ -21,7 +21,7 @@ public class TaskImplementation : ITask
         List<DO.Task> listTasks = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_task);
         //create a running ID number
         int newId = Config.NextTaskId;
-        DO.Task t = new DO.Task(newId, item.IsMileStone, item.EngineerId, item.Alias, item.Complexity/*,item.CreateDate*/, item.StartDate, item.ScheduledDate/*,item.ForecastDate*/, item.DeadlineDate, item.CompleteDate, item.RequiredEffortTime, item.Description, item.Deliverables, item.Remarks);
+        DO.Task t = new DO.Task(newId, item.IsMileStone, item.EngineerId, item.Alias, item.Complexity, item.CreateDate, item.StartDate, item.ScheduledDate/*,item.ForecastDate*/, item.DeadlineDate, item.CompleteDate, item.RequiredEffortTime, item.Description, item.Deliverables, item.Remarks);
         listTasks.Add(t);
         XMLTools.SaveListToXMLSerializer(listTasks, s_task);
         return newId;
