@@ -146,19 +146,20 @@ internal class EngineerImplementation : IEngineer
         }
         else
         {
-            throw new BO.ValidationException("Schedule has not been started or there are tasks that are still a work in progress");
+            //throw new BO.ValidationException("Schedule has not been started or there are tasks that are still a work in progress");
+            DO.Engineer doEngineer = new DO.Engineer
+        (item.Id, (DO.EngineerExperience)item.Level, item.Name, item.Email, item.Cost);
+            try
+            {
+                _dal.Engineer.Update(doEngineer);
+            }
+            catch (DO.DalDoesAlreadyExistException ex)
+            {
+                throw new BO.BlDoesNotExistException($"Engineer with ID={item.Id} already exists", ex);
+            }
         }
 
-        DO.Engineer doEngineer = new DO.Engineer
-        (item.Id, (DO.EngineerExperience)item.Level, item.Name, item.Email, item.Cost);
-        try
-        {
-            _dal.Engineer.Update(doEngineer);
-        }
-        catch (DO.DalDoesAlreadyExistException ex)
-        {
-            throw new BO.BlDoesNotExistException($"Engineer with ID={item.Id} already exists", ex);
-        }
+        
     }
 
     /// <summary>

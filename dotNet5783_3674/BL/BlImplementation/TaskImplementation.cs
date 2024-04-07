@@ -215,7 +215,7 @@ internal class TaskImplementation : BlApi.ITask
                     throw new BO.ValidationException("The start date entered does not match the rest of the schedule");
             }
             //If the start date is less than the start date of the entire project
-            if (!_dal.Dependency.ReadAll().Any(dep => dep?.DependentTask == item.Id) && item.StartDate <= _dal.ReturnStartProject())
+            if (!_dal.Dependency.ReadAll().Any(dep => dep?.DependentTask == item.Id) && item.StartDate < _dal.ReturnStartProject())
             {
                 throw new BO.ValidationException("The start date is less than the start date of the entire project");
             }
